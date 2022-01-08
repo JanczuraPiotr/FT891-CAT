@@ -1,4 +1,4 @@
-package sp9pj;
+package sp9pj.engine;
 
 import com.fazecast.jSerialComm.SerialPort;
 
