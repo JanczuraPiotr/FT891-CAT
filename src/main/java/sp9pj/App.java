@@ -2,15 +2,8 @@ package sp9pj;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import sp9pj.engine.Transport;
 import sp9pj.gui.ControlPanel;
-
-
-// wyłącz : PSO
-// włącz : PS1
 
 
 /**

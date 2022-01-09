@@ -1,12 +1,11 @@
 package sp9pj.engine;
 
 import com.fazecast.jSerialComm.SerialPort;
+import sp9pj.gui.ControlPanel;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Enumeration;
 
 public class Transport {
 
@@ -14,10 +13,11 @@ public class Transport {
     static final String ON = "PS1;";
     static final String AutoInformation = "AI1;";
 
-    public Transport(int port) {
+    public Transport(int port, ControlPanel controlPanel) {
         comPort = SerialPort.getCommPorts()[port];
         out = comPort.getOutputStream();
         in = comPort.getInputStream();
+        this.controlPanel =  controlPanel;
     }
 
     public void startListening()
@@ -30,17 +30,16 @@ public class Transport {
                     Thread.yield();
                 }
 
-                byte[] readBuffer = new byte[comPort.bytesAvailable()];
-                int numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                System.out.println("Read " + numRead + " bytes.");
-                System.out.println(Arrays.toString(readBuffer));
-
-                for(int i = 0; i< numRead; ++i) {
-                    System.out.print((char)readBuffer[i]);
-                }
-                System.out.println();
+                lastReading = new byte[comPort.bytesAvailable()];
+                comPort.readBytes(lastReading, lastReading.length);
+                NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(lastReading));
             }
         } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public byte[] getLastReading()
+    {
+        return lastReading;
     }
 
     public void connect() {
@@ -121,4 +120,6 @@ public class Transport {
     SerialPort comPort;
     OutputStream out;
     InputStream in;
+    byte[] lastReading;
+    ControlPanel controlPanel;
 }
