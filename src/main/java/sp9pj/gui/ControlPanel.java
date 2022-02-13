@@ -62,7 +62,7 @@ public class ControlPanel extends Pane {
         getChildren().add(mainLayout);
 
         addEventHandler(NewTransportEvent.NEW_TRANSPORT,new NewTransportHandler() {
-            public void newTransport(byte [] buffer) {
+            public void newTransport(String buffer) {
                 onNewTransport(buffer);
             }
         });
@@ -106,8 +106,8 @@ public class ControlPanel extends Pane {
 
     private final Transport transport;
 
-    public void onNewTransport(byte[] buffer) {
-        dashboard.appendText(new String(buffer, StandardCharsets.UTF_8));
+    public void onNewTransport(String str) {
+        dashboard.appendText(str);
         dashboard.appendText("\n-----------------------------------------------------------\n");
         dashboard.setScrollTop(Double.MAX_VALUE);
     }

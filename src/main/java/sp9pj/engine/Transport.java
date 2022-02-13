@@ -1,14 +1,13 @@
 package sp9pj.engine;
 
 import com.fazecast.jSerialComm.SerialPort;
+import sp9pj.data.AutoInformationCollector;
 import sp9pj.gui.ControlPanel;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.Buffer;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,7 +20,8 @@ public class Transport implements Runnable {
 
     public Transport(int port, ControlPanel controlPanel) {
 
-        SerialPort[] commPorts = comPort.getCommPorts();
+        SerialPort[] commPorts = SerialPort.getCommPorts();
+        autoInformationCollector = new AutoInformationCollector();
         for (int i = 0; i < commPorts.length; ++i) {
             System.out.println(commPorts[i].getSystemPortName());
         }
@@ -55,9 +55,11 @@ public class Transport implements Runnable {
 
                 lastReading = new byte[comPort.bytesAvailable()];
                 comPort.readBytes(lastReading, lastReading.length);
-                var stream = comPort.getInputStream();
+                if (autoInformationCollector.add(lastReading, lastReading.length) ) {
+                    NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(autoInformationCollector.getInformation()));
+                }
 
-                NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(lastReading));
+
             }
         } catch (Exception e) {
             System.out.println(tf.format(new Date()) + "Transport::startListening() >> catch (Exception e)");
@@ -167,10 +169,11 @@ public class Transport implements Runnable {
     OutputStream out;
     InputStream in;
     byte[] lastReading;
-    ControlPanel controlPanel;
+    ControlPanel controlPanel; // @task  Usunąć zależność od ControlPanel
     private final SimpleDateFormat tf;
     private Thread thread;
     private AtomicBoolean running = new AtomicBoolean(false);
     private AtomicBoolean stopped = new AtomicBoolean(true);
+    private AutoInformationCollector autoInformationCollector;
 
 }
