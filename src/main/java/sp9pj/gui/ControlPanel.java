@@ -107,9 +107,10 @@ public class ControlPanel extends Pane {
     private final Transport transport;
 
     public void onNewTransport(String str) {
-        dashboard.appendText(str);
-        dashboard.appendText("\n-----------------------------------------------------------\n");
-        dashboard.setScrollTop(Double.MAX_VALUE);
+        System.out.println(tf.format(new Date()) + "ControlPanel::onNewTransport -> str : " + str);
+//        dashboard.appendText(str);
+//        dashboard.appendText("\n-----------------------------------------------------------\n");
+//        dashboard.setScrollTop(Double.MAX_VALUE);
     }
 
     private final SimpleDateFormat tf;

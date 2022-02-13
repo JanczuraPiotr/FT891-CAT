@@ -27,7 +27,6 @@ public class AutoInformationCollector {
 
     public boolean add(String add) {
         inputBuffer.append(add);
-
         int beginCommandPosition = 0;
         int endCommandPosition = inputBuffer.indexOf(";");
 
@@ -37,21 +36,24 @@ public class AutoInformationCollector {
             beginCommandPosition = endCommandPosition + 1;
             endCommandPosition = inputBuffer.indexOf(";", beginCommandPosition);
         }
-
         if (beginCommandPosition != 0) {
             inputBuffer.delete(0, beginCommandPosition);
-            return true;
         }
-        return false;
+        return !readyCommands.isEmpty();
     }
 
     public String getInformation() {
         if (readyCommands.isEmpty()) {
             return "";
         }
+
         String ret = readyCommands.get(0);
         readyCommands.remove(0);
         return ret;
+    }
+
+    public boolean hasInformation() {
+        return !readyCommands.isEmpty();
     }
 
     public int size() {

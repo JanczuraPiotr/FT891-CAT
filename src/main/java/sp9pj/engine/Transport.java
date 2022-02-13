@@ -30,6 +30,7 @@ public class Transport implements Runnable {
         comPort = SerialPort.getCommPorts()[port];
         out = comPort.getOutputStream();
         in = comPort.getInputStream();
+        comPort.setBaudRate(19200);
         this.controlPanel =  controlPanel;
         thread = new Thread(this);
         tf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS | ");
@@ -55,8 +56,11 @@ public class Transport implements Runnable {
 
                 lastReading = new byte[comPort.bytesAvailable()];
                 comPort.readBytes(lastReading, lastReading.length);
+
                 if (autoInformationCollector.add(lastReading, lastReading.length) ) {
-                    NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(autoInformationCollector.getInformation()));
+                    while (autoInformationCollector.hasInformation()) {
+                        NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(autoInformationCollector.getInformation()));
+                    }
                 }
 
 
