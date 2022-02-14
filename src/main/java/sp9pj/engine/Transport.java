@@ -30,7 +30,7 @@ public class Transport implements Runnable {
         comPort = SerialPort.getCommPorts()[port];
         out = comPort.getOutputStream();
         in = comPort.getInputStream();
-        comPort.setBaudRate(19200);
+        comPort.setBaudRate(38400);
         this.controlPanel =  controlPanel;
         thread = new Thread(this);
         tf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS | ");
@@ -50,9 +50,6 @@ public class Transport implements Runnable {
                     Thread.sleep(100);
                     Thread.yield();
                 }
-
-                // odczytywać znaki z portu i dopisywać je do bufora który zostanie zgłoszony w zdarzeniu
-                // gdy przyjdzie znak ';' dodać go a następnie zgłosić ten bufor.
 
                 lastReading = new byte[comPort.bytesAvailable()];
                 comPort.readBytes(lastReading, lastReading.length);

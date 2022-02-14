@@ -99,7 +99,7 @@ public class AutoInformationCollectorTest {
         AutoInformationCollector aic = new AutoInformationCollector();
         Assert.assertTrue(aic.add("AI0;"));
         Assert.assertTrue(aic.add("AI1;"));
-        Assert.assertFalse(aic.add("!?"));
+        Assert.assertTrue(aic.add("!?"));
         Assert.assertEquals("AI0", aic.getInformation());
         Assert.assertEquals("AI1", aic.getInformation());
         Assert.assertEquals("", aic.getInformation());

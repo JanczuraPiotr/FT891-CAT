@@ -11,6 +11,11 @@ public class AutoInformationCollector {
         readyCommands = new LinkedList<>();
     }
 
+    /**
+     *
+     * @param add
+     * @return true Jeśli są gotowe informacje do odczytania
+     */
     public boolean add(char add) {
         if (add == ';') {
             readyCommands.add(inputBuffer.toString());
@@ -21,10 +26,21 @@ public class AutoInformationCollector {
         return false;
     }
 
+    /**
+     *
+     * @param bytes
+     * @param bytesAvailable
+     * @return true Jeśli są gotowe informacje do odczytania
+     */
     public boolean add(byte[] bytes, int bytesAvailable) {
         return add(new String(bytes , 0, bytesAvailable));
     }
 
+    /**
+     *
+     * @param add
+     * @return true Jeśli są gotowe informacje do odczytania
+     */
     public boolean add(String add) {
         inputBuffer.append(add);
         int beginCommandPosition = 0;
@@ -42,6 +58,10 @@ public class AutoInformationCollector {
         return !readyCommands.isEmpty();
     }
 
+    /**
+     *
+     * @return String opisujący jedną zmienną.
+     */
     public String getInformation() {
         if (readyCommands.isEmpty()) {
             return "";
@@ -52,10 +72,18 @@ public class AutoInformationCollector {
         return ret;
     }
 
+    /**
+     *
+     * @return true Jeśli są gotowe informacje do odczytania
+     */
     public boolean hasInformation() {
         return !readyCommands.isEmpty();
     }
 
+    /**
+     *
+     * @return Ilość zmian zgłoszonych przez radiostację.
+     */
     public int size() {
         return inputBuffer.length();
     }
