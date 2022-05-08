@@ -1,24 +1,31 @@
 package sp9pj.gui;
 
-import javafx.scene.chart.StackedAreaChart;
+import com.google.common.eventbus.EventBus;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import sp9pj.engine.NewTransportEvent;
-import sp9pj.engine.NewTransportHandler;
+import sp9pj.event.RadioStateChangeEvent;
+import sp9pj.listener.RadioStateChangeListener;
 import sp9pj.engine.Transport;
 
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
+
 
 public class ControlPanel extends Pane {
 
-    public ControlPanel() {
+    public ControlPanel(EventBus eventBus) {
         super();
+
+        this.eventBus = eventBus;
+        this.eventBus.register(new RadioStateChangeListener(s -> {
+            messageEventEvent(s);
+            return null;
+        }));
+        /// @Task usunwanie listenera
+
         tf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS | ");
         mainLayout = new VBox(3);
         mainLayout.prefWidthProperty().bind(this.widthProperty());
@@ -39,7 +46,7 @@ public class ControlPanel extends Pane {
         statusBar.prefHeightProperty().set(100);
 
 
-        this.transport = new Transport(2, this);
+        this.transport = new Transport(eventBus, 0, this);
 
         VBox mainBox = new VBox(2);
 
@@ -61,11 +68,6 @@ public class ControlPanel extends Pane {
 
         getChildren().add(mainLayout);
 
-        addEventHandler(NewTransportEvent.NEW_TRANSPORT,new NewTransportHandler() {
-            public void newTransport(String buffer) {
-                onNewTransport(buffer);
-            }
-        });
     }
 
     public void connect()
@@ -106,11 +108,10 @@ public class ControlPanel extends Pane {
 
     private final Transport transport;
 
-    public void onNewTransport(String str) {
-        System.out.println(tf.format(new Date()) + "ControlPanel::onNewTransport -> str : " + str);
-//        dashboard.appendText(str);
-//        dashboard.appendText("\n-----------------------------------------------------------\n");
-//        dashboard.setScrollTop(Double.MAX_VALUE);
+    public void messageEventEvent(RadioStateChangeEvent messageEvent) {
+        System.out.println(tf.format(new Date()) + "ControlPanel::onNewTransport -> str : " + messageEvent.getMessage());
+        dashboard.appendText(tf.format(new Date()) + messageEvent.getMessage());
+        dashboard.appendText("\n");
     }
 
     private final SimpleDateFormat tf;
@@ -118,5 +119,5 @@ public class ControlPanel extends Pane {
     private final HBox header;
     private final TextArea dashboard;
     private final HBox statusBar;
-
+    private EventBus eventBus = new EventBus();
 }

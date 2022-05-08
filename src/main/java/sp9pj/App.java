@@ -1,5 +1,6 @@
 package sp9pj;
 
+import com.google.common.eventbus.EventBus;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -15,7 +16,8 @@ import sp9pj.gui.ControlPanel;
 public class App extends Application {
 
     public App() {
-        controlPanel = new ControlPanel();
+        eventBus = new EventBus();
+        controlPanel = new ControlPanel(eventBus);
     }
 
     @Override
@@ -49,5 +51,6 @@ public class App extends Application {
     }
 
     private final ControlPanel controlPanel;
+    private final EventBus eventBus;
 
 }
