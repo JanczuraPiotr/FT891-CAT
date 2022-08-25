@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ft891Cat" />
+        <module name="FT891-CAT" />
       </profile>
     </annotationProcessing>
   </component>
