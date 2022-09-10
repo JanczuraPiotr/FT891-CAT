@@ -3,4 +3,4 @@ project(cat_server)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(cat_server main.cpp)
+add_executable(cat_server src/main.cpp)
