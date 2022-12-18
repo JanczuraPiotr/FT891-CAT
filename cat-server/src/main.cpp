@@ -1,34 +1,28 @@
 #include <iostream>
 
-#include <chrono>
-#include <thread>
-
-#include "device/FT891.hpp"
-#include "lib/Usb.hpp"
+#include "application/Application.hpp"
+#include "application/Config.hpp"
+#include "exception/Generic.hpp"
 
 int main()
 {
 
-  sp9pj::dev::FT891 ft891(0);
-
-
   try {
-    if(ft891.on()) {
-      std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-      std::this_thread::sleep_for(std::chrono::seconds(3));
-      std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-      ft891.off();
-      std::cout << __FILE__ << ":" << __LINE__ << std::endl;
-    }
 
-  } catch (std::exception &ex) {
-    std::cout << ex.what() << std::endl;
-  } catch (...) {
-    std::cout << "Jakiś wyjątek" << std::endl;
+    sp9pj::app::Config config;
+    config.init();
+
+    sp9pj::app::Application application(config);
+
+    application.start();
+
+    application.run();
+
+    application.stop();
+
+  } catch (sp9pj::ex::Generic &ex) {
+    std::cout << ex.description() << std::endl;
   }
-
-
-
 
   return 0;
 }

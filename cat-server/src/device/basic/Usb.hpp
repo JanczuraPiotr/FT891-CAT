@@ -12,18 +12,18 @@
 
 #include "def.hpp"
 
-namespace sp9pj {
+namespace sp9pj::dev {
 
 
 class Usb {
 public:
 
-  explicit Usb(unsigned nrPortu);
+  explicit Usb();
   virtual ~Usb();
 
-  bool connect();
+  void connect(PortUsbNumber portUsbNumber, PortUsbSpeed portUsbSpeed);
   void disconnect();
-  bool isConnected();
+  bool isConnected() const;
 
   sp9pj::Buffer query(const sp9pj::Buffer &buffer);
   size_t send(const sp9pj::Buffer &query);
@@ -35,8 +35,8 @@ private:
   void checkDeadline();
 
 private:
-  unsigned _nrPortu;
-  unsigned _speed;
+  PortUsbNumber _portNumber;
+  PortUsbSpeed  _portSpeed;
   bool _connected;
   boost::asio::io_service _io_service;
   boost::asio::serial_port _port;

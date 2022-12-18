@@ -10,8 +10,8 @@
 
 namespace sp9pj::dev {
 
-FT891::FT891(unsigned portNr)
-  : _usb(portNr)
+FT891::FT891()
+  : _usb()
 {
 
 }
@@ -22,9 +22,19 @@ FT891::~FT891()
 }
 
 
+void FT891::connect(PortUsbNumber portUsbNumber, PortUsbSpeed portUsbSpeed)
+{
+   _usb.connect(portUsbNumber, portUsbSpeed);
+}
+
+void FT891::disconnect()
+{
+
+}
+
 bool FT891::on()
 {
-  if (_usb.connect()) {
+  if (_usb.isConnected()) {
     _usb.send("PS1;");
     std::this_thread::sleep_for(std::chrono::seconds(1));
     _usb.send("PS1;");
