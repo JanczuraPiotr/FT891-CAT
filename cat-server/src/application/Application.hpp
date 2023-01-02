@@ -5,6 +5,8 @@
 #ifndef SRC_APPLICATION_APPLICATION
 #define SRC_APPLICATION_APPLICATION
 
+#include <chrono>
+
 #include "application/Config.hpp"
 
 #include "device/FT891.hpp"
@@ -30,6 +32,9 @@ private:
     Config &_config;
 
     dev::FT891 _ft891;
+
+    bool _runMainLoop;
+    std::chrono::milliseconds _sleepMainLoop;
 
 };
 

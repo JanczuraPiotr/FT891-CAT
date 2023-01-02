@@ -5,12 +5,16 @@
 #include "Application.hpp"
 
 #include <thread>
+
 #include "exception/Generic.hpp"
 
 namespace sp9pj::app {
 
 Application::Application(Config &config)
-        : _config(config), _ft891() {
+        : _config(config)
+        , _ft891()
+        , _runMainLoop(false)
+        , _sleepMainLoop(10){
 
 }
 
@@ -24,13 +28,30 @@ void Application::start() {
 
     try {
         _ft891.on();
+        _runMainLoop = true;
     } catch (...){
         throw ex::Generic("Connection error.", __PRETTY_FUNCTION__);
     }
 }
 
 void Application::run() {
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    using SC = std::chrono::steady_clock;
+
+    SC steadyClock;
+    do {
+        SC::time_point begin = steadyClock.now();
+
+
+        // loop
+
+
+        SC::duration workTime = steadyClock.now() - begin;
+        SC::duration sleep = _sleepMainLoop - workTime;
+
+        if (sleep.count() > 0) {
+            std::this_thread::sleep_for(sleep);
+        }
+    } while (_runMainLoop);
 }
 
 void Application::stop() {

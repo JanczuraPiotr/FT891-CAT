@@ -8,7 +8,10 @@
 namespace sp9pj::app {
 
 
-Config::Config() {
+Config::Config()
+    : _portUsbNumber(0)
+    , _portUsbSpeed(38400)
+{
 
 }
 
@@ -18,8 +21,8 @@ Config::~Config() {
 
 void Config::init() {
     // Docelowo odczyt z pliku konfiguracyjnego.
-    portUsbNumber(10);
-    portUsbSpeed(38400);
+    // portUsbNumber(0);
+    // portUsbSpeed(38400);
 }
 
 

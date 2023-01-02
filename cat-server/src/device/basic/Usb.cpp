@@ -30,7 +30,8 @@ Usb::Usb()
         , _connected(false)
         , _port(_io_service)
         , _deadlineTimer(_io_service)
-        , _timeout(boost::posix_time::seconds(3)) {
+        , _timeout(boost::posix_time::seconds(3))
+{
     _deadlineTimer.expires_at(boost::posix_time::pos_infin);
     checkDeadline();
 
@@ -57,10 +58,13 @@ void Usb::connect(PortUsbNumber portUsbNumber, PortUsbSpeed portUsbSpeed) {
     try {
         _port.open("/dev/ttyUSB" + std::to_string(_portNumber));
         _port.set_option(boost::asio::serial_port_base::baud_rate(_portSpeed));
-        // TODO Sprawdzić jaki wyjątek rzuca set_option, przechwycić i rzutować.
-//    }catch (std::exception &ex) {
-//        std::cout << ex.what() << std::endl;
+        _connected = true;
+         // TODO Sprawdzić jaki wyjątek rzuca set_option, przechwycić i rzutować.
+    }catch (std::exception &ex) {
+        _connected = false;
+        std::cout << ex.what() << std::endl;
     } catch (...) {
+        _connected = false;
         throw dev::ex::DeviceConnectionError(portUsbNumber);
     }
 
