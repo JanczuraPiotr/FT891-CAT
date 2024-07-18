@@ -1,0 +1,7 @@
+
+
+Uruchomienie PS1; dwa razy
+Wyłączenie PS0;
+
+Start automatycznego wysyłania zmian AI1;
+Koniec automatycznego wysyłania zmian AI0;

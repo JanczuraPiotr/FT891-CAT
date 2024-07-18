@@ -46,7 +46,7 @@ public class ControlPanel extends Pane {
         statusBar.prefHeightProperty().set(100);
 
 
-        this.transport = new Transport(eventBus, 0, this);
+        this.transport = new Transport(eventBus, 1, this);
 
         VBox mainBox = new VBox(2);
 
