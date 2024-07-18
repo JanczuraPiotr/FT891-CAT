@@ -1,7 +1,9 @@
 package sp9pj.engine;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.google.common.eventbus.EventBus;
 import sp9pj.data.AutoInformationCollector;
+import sp9pj.event.RadioStateChangeEvent;
 import sp9pj.gui.ControlPanel;
 
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 public class Transport implements Runnable {
 
     static final String OFF = "PS0;";
@@ -18,14 +21,13 @@ public class Transport implements Runnable {
     static final String StartAutoInformation = "AI1;";
     static final String StopAutoInformation = "AI0;";
 
-    public Transport(int port, ControlPanel controlPanel) {
-
+    public Transport(EventBus eventBus, int port, ControlPanel controlPanel) {
+        this.eventBus = eventBus;
         SerialPort[] commPorts = SerialPort.getCommPorts();
         autoInformationCollector = new AutoInformationCollector();
         for (int i = 0; i < commPorts.length; ++i) {
             System.out.println(commPorts[i].getSystemPortName());
         }
-
 
         comPort = SerialPort.getCommPorts()[port];
         out = comPort.getOutputStream();
@@ -56,7 +58,7 @@ public class Transport implements Runnable {
 
                 if (autoInformationCollector.add(lastReading, lastReading.length) ) {
                     while (autoInformationCollector.hasInformation()) {
-                        NewTransportEvent.fireEvent(controlPanel, new NewTransportEvent(autoInformationCollector.getInformation()));
+                        eventBus.post(new RadioStateChangeEvent(autoInformationCollector.getInformation()));
                     }
                 }
 
@@ -176,5 +178,5 @@ public class Transport implements Runnable {
     private AtomicBoolean running = new AtomicBoolean(false);
     private AtomicBoolean stopped = new AtomicBoolean(true);
     private AutoInformationCollector autoInformationCollector;
-
+    private final EventBus eventBus;
 }
